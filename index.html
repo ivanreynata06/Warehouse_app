@@ -2,32 +2,145 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Aplikasi Saya</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PPR Stock Dashboard</title>
     <style>
-        /* Mengilangkan margin dan membuat iframe memenuhi seluruh layar HP */
+        /* Mengatur agar web memenuhi layar penuh tanpa scroll ganda */
         html, body {
             margin: 0;
             padding: 0;
-            height: 100%;
             width: 100%;
+            height: 100%;
             overflow: hidden;
-            background-color: #ffffff;
+            font-family: sans-serif;
+            background-color: #1a1a1a;
         }
+
+        /* Pembungkus utama untuk tata letak menu dan konten */
+        .app-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Sidebar Navigasi Kiri */
+        .sidebar {
+            width: 260px;
+            background-color: #131314;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #2d2d2d;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #2d2d2d;
+        }
+
+        .menu-title {
+            padding: 15px 20px 5px 20px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #808080;
+        }
+
+        .menu-item {
+            padding: 12px 20px;
+            color: #c4c7c5;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .menu-item:hover {
+            background-color: #282a2c;
+            color: #ffffff;
+        }
+
+        .menu-item.active {
+            background-color: #1e2b22;
+            color: #6dd585;
+            border-left: 4px solid #6dd585;
+        }
+
+        /* Area Konten Utama (Tempat menampilkan Google Apps Script) */
+        .main-content {
+            flex: 1;
+            height: 100%;
+            position: relative;
+        }
+
+        /* Bingkai Iframe dibuat fullscreen di dalam area konten */
         iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
             border: none;
+            background-color: #1a1a1a;
         }
     </style>
 </head>
 <body>
 
-    <!-- GANTI LINK DI BAWAH INI DENGAN URL WEB APP GOOGLE APPS SCRIPT ANDA -->
-    <iframe src="https://script.google.com/macros/s/AKfycbwgwpJCXVnmdwGjmOAAxieYweUEZQUdVXoX-v6eP9R6QYvNb1QJ0hZyxiuMK6EgLbIqlw/exec"></iframe>
+    <div class="app-container">
+        <!-- SIDEBAR KIRI -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                📦 PPR Stock
+            </div>
+            
+            <div class="menu-title">Menu</div>
+            
+            <!-- Tambahkan/ubah parameter ?page= sesuai kebutuhan Apps Script kamu -->
+            <div class="menu-item active" onclick="bukaHalaman(this, 'dashboard')">Dashboard WH Import</div>
+            <div class="menu-item" onclick="bukaHalaman(this, 'monitoring_stock')">Monitoring Stock, Inbound & Out</div>
+            <div class="menu-item" onclick="bukaHalaman(this, 'kanban')">Monitoring Kanban</div>
+            <div class="menu-item" onclick="bukaHalaman(this, 'rekap')">Rekap Muatan</div>
+            <div class="menu-item" onclick="bukaHalaman(this, 'opname')">Stock Opname</div>
+            <div class="menu-item" onclick="bukaHalaman(this, 'loading')">Loading Time Pengiriman</div>
+        </div>
+
+        <!-- AREA KONTEN UTAMA -->
+        <div class="main-content">
+            <!-- Iframe ini yang bertugas menyembunyikan banner Google Apps Script -->
+            <iframe id="webFrame" src=""></div>
+        </div>
+    </div>
+
+    <script>
+        // PENTING: Ganti URL di bawah ini dengan URL Web App Google Apps Script milikmu yang asli
+        const BASE_URL = "https://script.google.com/macros/s/AKfycbwgwpJCXVnmdwGjmOAAxieYweUEZQUdVXoX-v6eP9R6QYvNb1QJ0hZyxiuMK6EgLbIqlw/exec";
+
+        function bukaHalaman(elemenMenu, namaHalaman) {
+            // 1. Ubah tampilan menu aktif (warna hijau indikator)
+            const semuaMenu = document.querySelectorAll('.menu-item');
+            semuaMenu.forEach(menu => menu.classList.remove('active'));
+            elemenMenu.classList.add('active');
+
+            // 2. Gabungkan URL utama dengan halaman yang dituju
+            const urlTujuan = `${BASE_URL}?page=${namaHalaman}`;
+
+            // 3. Masukkan URL tersebut ke dalam iframe secara diam-diam
+            document.getElementById('webFrame').src = urlTujuan;
+        }
+
+        // Jalankan halaman pertama secara otomatis saat web pertama kali dibuka
+        window.onload = function() {
+            const menuPertama = document.querySelector('.menu-item.active');
+            if(menuPertama) {
+                bukaHalaman(menuPertama, 'dashboard');
+            }
+        };
+    </script>
 
 </body>
 </html>
